@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Gloudemans\Shoppingcart\Facades\Cart;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('products','ProductController');
+Route::resource('carts','CartController');
+Route::get('vide',function (){
+    return Cart::destroy();
+});
