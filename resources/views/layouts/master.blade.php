@@ -8,6 +8,7 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.0.1">
     <title>Blog Template · Bootstrap</title>
+    @yield('extra-script')
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/blog/">
 
@@ -23,6 +24,7 @@
 <link rel="icon" href="/docs/4.5/assets/img/favicons/favicon.ico">
 <meta name="msapplication-config" content="/docs/4.5/assets/img/favicons/browserconfig.xml">
 <meta name="theme-color" content="#563d7c">
+
 
 
     <style>
@@ -323,5 +325,6 @@
     <a href="#">Back to top</a>
   </p>
 </footer>
+@yield('extra-js')
 </body>
 </html>

@@ -22,3 +22,4 @@ Route::resource('carts','CartController');
 Route::get('vide',function (){
     return Cart::destroy();
 });
+Route::resource('stripes','StripeController');
