@@ -18,9 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('products','ProductController');
-Route::resource('carts','CartController');
+Route::resource('carts','CartController')->except('update');
+Route::put('carts/{RowId}','CartController@update')->name('carts.update');
 Route::get('vide',function (){
     return Cart::destroy();
 });
 Route::resource('stripes','StripeController');
 Route::get("/merci" , 'StripeController@thankyou');
+Route::get('/updated', 'CartController@updated');

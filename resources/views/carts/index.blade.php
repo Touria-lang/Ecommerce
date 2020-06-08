@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('extra-meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('content')
 
 @if (Cart::count() > 0)
@@ -48,8 +51,16 @@
                             </div>
                         </div>
                         </th>
-                        <td class="border-0 align-middle"><strong>{{$cart->model->getFrenchPrice()}}</strong></td>
-                        <td class="border-0 align-middle"><strong>1</strong></td>
+                        <td class="border-0 align-middle"><strong>{{getPrice($cart->subtotal())}}</strong></td>
+                        <td class="border-0 align-middle">
+                          <strong>
+                            <select name="qty" id="qty" class="custom-select" data-id="{{$cart->rowId}}">
+                              @for ($i = 1; $i < 7; $i++)
+                                <option value="{{$i}}" {{$i == $cart->qty ? 'selected' : ''}}>{{$i}}</option> 
+                              @endfor
+                            </select>
+                          </strong>
+                        </td>
                         <td class="border-0 align-middle">
                             <form action="{{route('carts.destroy',$cart->rowId)}}" method="post">
                                 @csrf
@@ -109,4 +120,40 @@
 @else
 <p>Votre panier est vide</p>
 @endif
+@endsection
+@section('extra-js')
+  <script>
+    var selects = document.querySelectorAll('#qty');
+    Array.from(selects).forEach((element) => {
+      console.log(element);
+      element.addEventListener('change', function () {
+        var rowId = this.getAttribute('data-id');
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        //var redirect = '/updated';
+        fetch(
+          '/carts/'+rowId,
+          {
+            headers : {
+              "Content-Type" : "application/json",
+              "Accept" : "application/json, text-plain, */*",
+              "X-Requested-With" : "XMLHttpRequest",
+              "X-CSRF-TOKEN" : token
+            },
+
+            method: 'put',
+            body : JSON.stringify({
+                    qty : this.value
+            })
+          }
+        ).then((data) => {
+          console.log(data),
+          location.reload()
+          //window.location.href = redirect
+        }).catch((error) => {
+          console.log(error)
+        })
+      });
+    })
+    
+  </script>
 @endsection
