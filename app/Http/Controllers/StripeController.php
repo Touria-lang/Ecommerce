@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Order;
+use DateTime;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Session;
 
 class StripeController extends Controller
 {
@@ -17,6 +20,9 @@ class StripeController extends Controller
      */
     public function index()
     {
+        if(Cart::count() <= 0) {
+            return redirect()->route('products.index');
+        }
         Stripe::setApiKey('sk_test_IByROLumbBpc01p7ghlBsWfw000TDF9S7B');
 
         $intent = PaymentIntent::create([
@@ -50,7 +56,37 @@ class StripeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        
+        $data = $request->json()->all();
+        $order = new Order();
+        
+        $order->payment_intent_id = $data['payment_intent']['id'];
+        $order->amount = $data['payment_intent']['amount'];
+        $order->payment_created_at = (new DateTime())->setTimestamp($data['payment_intent']['created'])->format('d-m-y');
+            $i =0;
+            foreach (Cart::content() as $product) {
+                $products['product_'.$i][] = $product->model->title;
+                $products['product_'.$i][] = $product->model->description;
+                $products['product_'.$i][] = $product->qty;
+                $i++;
+            }
+        
+        $order->products = serialize($products);
+        $order->user_id = 15;
+        $order->save();
+
+        if($data['paymentIntent']['status'] == 'succeeded'){
+            Cart::destroy();
+            Session::flash('success', 'Votre Commande est traite avec success');
+            return response()->json(['success' => 'Payment Intent Succedded']);
+        } else {
+            return response()->json(['success' => 'Payment Intent Not Succedded']);
+        }
+            
+            
+
+        Cart::destroy();
     }
 
     /**
@@ -59,6 +95,10 @@ class StripeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function thankyou()
+    {
+        return Session::has('success') ? view('stripes.thankyou') : redirect()->route('products.index');    
+    }
     public function show($id)
     {
         //
