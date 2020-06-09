@@ -1,4 +1,6 @@
 <?php
+
+use App\category_product;
 use App\Product;
 use Illuminate\Database\Seeder;
 
@@ -11,6 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(ProductSeeder::class);
+        $this->call(category_product_Seeder::class);
     }
 }

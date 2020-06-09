@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    public function Categories(){
+        return $this->belongsToMany('App\Category');
+    }
 
     public function getFrenchPrice()
     {

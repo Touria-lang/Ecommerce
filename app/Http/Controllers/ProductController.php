@@ -13,8 +13,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::inRandomOrder()->take(6)->get();
         
+        if(request()->category){
+            //faire une requete sur la relation
+         $products = Product::with('categories')->whereHas('categories', function($query){
+            $query->where('slug',request()->category);
+         })->paginate(6);
+      
+        }
+        else {
+         $products = Product::with('categories')->paginate(6);   
+        }
+        
+          
+       
         return view('products.index', [
             'products' => $products
         ]);
