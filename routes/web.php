@@ -26,3 +26,8 @@ Route::get('vide',function (){
 Route::resource('stripes','StripeController');
 Route::get("/merci" , 'StripeController@thankyou');
 Route::get('/updated', 'CartController@updated');
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class ProductController extends Controller
 {
@@ -13,16 +14,18 @@ class ProductController extends Controller
      */
     public function index()
     {
+
+        
         
         if(request()->category){
             //faire une requete sur la relation
          $products = Product::with('categories')->whereHas('categories', function($query){
             $query->where('slug',request()->category);
-         })->paginate(6);
+         })->orderBy('created_at', 'DESC')->paginate(6);
       
         }
         else {
-         $products = Product::with('categories')->paginate(6);   
+         $products = Product::with('categories')->orderBy('created_at','DESC')->paginate(6);   
         }
         
           

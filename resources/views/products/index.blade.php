@@ -18,7 +18,11 @@
           <a href="{{route('products.show',['product' => $product])}}" class="stretched-link btn btn-primary">Voir l'article</a>
         </div>
         <div class="col-auto d-none d-lg-block">
-          <img src="{{$product->image}}" >
+          <img src="{{
+           str_replace('\\', '/', asset('storage/' . Arr::get(json_decode($product->image), 0)->download_link))
+            
+          }}" width="150" height="250">
+          
         </div>
       </div>
     </div>
