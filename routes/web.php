@@ -17,6 +17,7 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/search','ProductController@search')->name('products.search');
 Route::resource('products','ProductController');
 Route::resource('carts','CartController')->except('update');
 Route::put('carts/{RowId}','CartController@update')->name('carts.update');

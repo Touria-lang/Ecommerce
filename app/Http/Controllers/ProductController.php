@@ -12,11 +12,18 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function search()
     {
-
+        request()->validate([
+            'q' => 'required|min:3'
+        ]);
+        $q = request()->input('q');
+        $products = Product::where('title','like' , "%$q%")->orWhere('description', 'like', "%$q%")->paginate(6);
         
-        
+        return view('products.index',['products' => $products]);
+    }
+    public function index()
+    {        
         if(request()->category){
             //faire une requete sur la relation
          $products = Product::with('categories')->whereHas('categories', function($query){
